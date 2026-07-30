@@ -232,29 +232,79 @@ navLinks.forEach(link => {
 // ========================================
 // Scroll Events
 // ========================================
+// window.addEventListener('scroll', () => {
+//     const scrollY = window.scrollY;
+    
+//     // Navbar background
+//     if (scrollY > 50) {
+//         navbar.classList.add('scrolled');
+//     } else {
+//         navbar.classList.remove('scrolled');
+//     }
+    
+//     // Back to top button
+//     if (scrollY > 500) {
+//         backToTop.classList.add('visible');
+//     } else {
+//         backToTop.classList.remove('visible');
+//     }
+    
+//     // Reveal animations
+//     revealOnScroll();
+// });
+
+// backToTop.addEventListener('click', () => {
+//     window.scrollTo({ top: 0, behavior: 'smooth' });
+// });
+const aboutImage = document.querySelector(".about-image");
+const aboutSection = document.querySelector("#about");
+
 window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    
-    // Navbar background
+
+    // ✅ Navbar
     if (scrollY > 50) {
         navbar.classList.add('scrolled');
     } else {
         navbar.classList.remove('scrolled');
     }
-    
-    // Back to top button
+
+    // ✅ Back to top
     if (scrollY > 500) {
         backToTop.classList.add('visible');
     } else {
         backToTop.classList.remove('visible');
     }
-    
-    // Reveal animations
-    revealOnScroll();
-});
 
-backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 🔥 ABOUT IMAGE LOGIC (FINAL)
+    if (aboutImage && aboutSection) {
+        const sectionTop = aboutSection.offsetTop;
+
+        // 👉 Device detection
+        const isMobile = window.innerWidth <= 768;
+
+        // 👉 CONTROL POINT (IMPORTANT)
+        const triggerStart = isMobile
+            ? sectionTop + 50   // mobile → early start
+            : sectionTop + 150;  // desktop → late start (no instant fade)
+
+        const distance = scrollY - triggerStart;
+
+        if (distance > 0) {
+            const opacity = Math.max(1 - distance / 400, isMobile ? 0.1 : 1);
+            const translate = Math.min(distance / 5, 80);
+            const scale = 1 - Math.min(distance / 2000, 0.1);
+
+            aboutImage.style.opacity = isMobile ? opacity : 1; // ❗ desktop pe fade OFF
+            aboutImage.style.transform = `translateX(-${translate}px) scale(${scale})`;
+        } else {
+            aboutImage.style.opacity = 1;
+            aboutImage.style.transform = "translateX(0) scale(1)";
+        }
+    }
+
+    // ✅ Reveal animations
+    revealOnScroll();
 });
 
 // ========================================
